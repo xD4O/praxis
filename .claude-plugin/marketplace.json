@@ -1,0 +1,14 @@
+{
+  "name": "praxis",
+  "owner": {
+    "name": "xD4O",
+    "url": "https://github.com/xD4O"
+  },
+  "plugins": [
+    {
+      "name": "praxis",
+      "source": "./",
+      "description": "Reasoning methodology layer for AI agents — classifies problems, routes to reasoning protocols, and validates designs before execution"
+    }
+  ]
+}
