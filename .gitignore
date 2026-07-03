@@ -1,0 +1,2 @@
+# Eval run artifacts (transcripts, judge outputs) — machine-local, never committed
+evals/results/
