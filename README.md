@@ -1,6 +1,5 @@
 ![Praxis Banner](assets/banner.png)
 
-# Praxis
 
 **A reasoning methodology plugin for AI coding agents.**
 
