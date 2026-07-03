@@ -55,12 +55,13 @@ Built through iterations of testing and tuning. Every critical test passes.
 | Q4: Architecture quality | Reversibility, boundary analysis, bottleneck ID |
 | S1: Superpowers handoff | Praxis reasons first, then Superpowers executes |
 
-## The 8 skills
+## The 13 skills
 
 Each skill is a behavioral protocol with mandatory gates — not a reference document to browse.
 
 | Skill | What it enforces | When it fires |
 |---|---|---|
+| **intent-alignment** | Spec mirroring, three-interpretations check, misunderstanding premortem | First, whenever a request could be read more than one way |
 | **problem-classification** | 4 gates: name type → enumerate constraints → select frameworks → frame approach | Before any new design or feature |
 | **gap-analysis** | 7 checks: inversion, second-order, MECE, map vs territory, adversarial, simplicity, reversibility | Before finalizing any design or plan |
 | **security-reasoning** | STRIDE per trust boundary, attack surface table, top 3 mitigations | Auth, crypto, input handling, payments |
@@ -69,6 +70,10 @@ Each skill is a behavioral protocol with mandatory gates — not a reference doc
 | **architecture-reasoning** | Reversibility classification, build/buy/adopt, boundary analysis, bottleneck ID | Architecture and module decisions |
 | **decision-analysis** | Weighted criteria, expected value, second-order, pre-mortem, steelman | Trade-offs and choosing between alternatives |
 | **strategic-reasoning** | JTBD, SWOT with cross-referencing, kill list, measurable OKRs | Business strategy and roadmap decisions |
+| **performance-reasoning** | Baseline before changes, Theory of Constraints, same-methodology verification | Making working code faster, cheaper, or smaller |
+| **testing-strategy** | Test-type classification, high-value failure modes, fail-then-pass regression proof | Deciding what to test; verifying a bug fix is real |
+| **estimation** | Bounded decomposition, reference-class forecasting, explicit ranges and padding | Before committing to effort, time, or cost |
+| **skill-creation** | Named trigger, prior-art search, structure checks, evidence, one problem per PR | Creating or modifying a PRAXIS skill |
 
 ## Installation
 

@@ -13,7 +13,7 @@ description: >
 
 PRAXIS does two things before any code or plan is produced:
 
-1. **Converge** — make sure you and the user mean the same thing.
+1. **Converge** — make sure you and the user mean the same thing (`intent-alignment`).
 2. **Reason** — apply the right framework for the problem type, then validate the result.
 
 ## Complexity gate
@@ -44,18 +44,24 @@ Identify **every** row that applies — protocols compose, they don't compete:
 
 | The task involves | Protocol |
 |---|---|
+| A request whose scope or goal could be read more than one way | `intent-alignment` — always first |
 | Starting any new design or feature | `problem-classification` |
 | Architecture, module boundaries, build-vs-buy | `architecture-reasoning` |
 | Auth, authorization, crypto, input handling, PII, payments | `security-reasoning` |
 | Choosing between options, trade-offs, priorities | `decision-analysis` |
 | Debugging, investigating, diagnosing failures | `diagnostic-reasoning` |
+| Making working code faster, cheaper, or smaller | `performance-reasoning` |
+| Deciding what to test and how; verifying a bug fix is real | `testing-strategy` |
+| Committing to an effort, time, or cost estimate | `estimation` |
 | Writing, reviewing, or refactoring significant code | `code-quality-analysis` |
 | Business strategy, positioning, roadmap priorities | `strategic-reasoning` |
+| Creating or modifying a PRAXIS-format skill itself | `skill-creation` |
 | **Any** design, plan, or recommendation about to be final | `gap-analysis` — always last |
 
-Ordering: `problem-classification` first when the work is new. `security-reasoning`
-whenever its row matches, in addition to the others. `gap-analysis` last, before
-anything is presented as final.
+Ordering: `intent-alignment` first whenever the request is ambiguous, then
+`problem-classification` when the work is new. `security-reasoning` whenever its row
+matches, in addition to the others. `gap-analysis` last, before anything is presented
+as final.
 
 **Loading a protocol:** invoke it as a skill — `praxis:<name>` when installed as a
 plugin, `<name>` when skills are installed flat. If your harness has no skill

@@ -1,6 +1,6 @@
 {
   "name": "praxis",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "description": "Reasoning methodology layer for AI agents — classifies problems, routes to reasoning protocols, and validates designs before execution",
   "author": {
     "name": "xD4O",
