@@ -17,6 +17,11 @@ Do not skip steps. Do not combine steps. Do not summarize. Work through each gat
 You have produced a design, plan, or recommendation. Before presenting it as final,
 you MUST run all 7 checks below. Do not skip any. Report each result explicitly.
 
+If your harness supports subagents, dispatch these checks to a fresh-context reviewer
+using `agents/reasoning-reviewer.md` — a reviewer that has not seen your design's
+justifications catches what self-review misses. Required at the DEEP tier; recommended
+whenever the decision is hard to reverse.
+
 ## CHECK 1 — Inversion
 
 Ask: "How would I guarantee this fails?"

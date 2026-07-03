@@ -1,151 +1,109 @@
 ---
 name: using-praxis
 description: >
-  MANDATORY — HIGHEST PRIORITY SKILL. You MUST invoke this skill (praxis) BEFORE invoking
-  superpowers:brainstorming or ANY other skill when the task is non-trivial. This skill
-  classifies the problem, selects reasoning frameworks, and runs threat analysis BEFORE
-  brainstorming begins. Do NOT invoke superpowers:brainstorming first. Do NOT respond
-  directly. Do NOT ask clarifying questions on your own. Invoke praxis FIRST, complete
-  its gates, THEN hand off to superpowers:brainstorming. Non-trivial means: system design,
-  feature planning, architecture decisions, debugging, security-sensitive code, trade-off
-  evaluation, code review, or refactoring. Trivial means: fix a typo, rename a variable,
-  answer a factual question, run a command.
+  Reasoning router — invoke before starting any non-trivial task: designing a system
+  or feature, debugging a failure, architecture decisions, security-sensitive code,
+  trade-off choices, significant refactors, reviewing a design or plan, or strategy.
+  Classifies the problem, routes to the matching reasoning protocol, and validates
+  conclusions before they are final. Skip only for trivial mechanical work: typo
+  fixes, renames, one-liners, factual questions, running commands.
 ---
 
-# PRAXIS Reasoning Protocol
+# PRAXIS Router
 
-EXTREMELY_IMPORTANT: This protocol is MANDATORY, not advisory. You do NOT have the option
-to "just engage directly" or "handle this conversationally" when a non-trivial task matches
-the routing table below. You MUST invoke the matching skill BEFORE you respond to the user.
+PRAXIS does two things before any code or plan is produced:
 
-<HARD-GATE>
-BEFORE writing ANY response to a non-trivial user request, you MUST:
-
-1. Classify the task against the complexity gate below
-2. If non-trivial: identify the matching skill from the routing table
-3. Invoke that skill using the Skill tool
-4. Follow the skill's protocol completely
-5. ONLY THEN respond to the user with your analysis
-
-You are NOT ALLOWED to skip this process. You are NOT ALLOWED to "engage directly" with
-a non-trivial task. You are NOT ALLOWED to decide that you can "handle this without the
-skill." The skill exists because ad-hoc reasoning misses things. Every time.
-
-If you catch yourself thinking "I can just handle this directly" or "this doesn't need
-the full protocol" for a task that matches the non-trivial list — STOP. That impulse is
-exactly why this gate exists. Invoke the skill.
-</HARD-GATE>
+1. **Converge** — make sure you and the user mean the same thing.
+2. **Reason** — apply the right framework for the problem type, then validate the result.
 
 ## Complexity gate
 
-**Trivial** (skip PRAXIS, respond directly):
-Fix a typo. Rename a variable. Answer a factual question. Run a command. Write a one-liner.
-Format something. Explain syntax. Simple file edits. Git operations. Package installs.
+**Trivial — respond directly, no protocol:** typo fixes, renames, one-liners, factual
+questions, running commands, formatting, syntax explanations, simple file edits, git
+operations, package installs.
 
-**Non-trivial** (MUST invoke matching skill BEFORE responding):
-Design a system or feature. Debug a complex issue. Make an architecture decision. Evaluate
-trade-offs. Write security-sensitive code. Refactor significant code. Plan a feature. Review
-an approach or design. Choose between alternatives. Analyze a failure or incident. Build
-anything with auth, payments, or user data.
+**Everything else routes below.** If unsure, run the QUICK tier — it costs under a
+minute. And if you catch yourself thinking "I can handle this directly" or "this is
+straightforward enough" on a task that matches a routing row, treat that impulse as
+the signal to route, not to skip.
 
-If unsure whether trivial or non-trivial: invoke the skill. False positives cost 30 seconds
-of structured thinking. False negatives cost hours of rework from a bad approach.
+## Depth tiers
 
-## Skill routing
+Scale rigor to irreversibility × blast radius:
 
-When a non-trivial task arrives, invoke the FIRST matching skill from this table:
+- **QUICK** — run the protocol's gates mentally; report a 3–5 line summary. For small,
+  reversible work, or when the user asks for brevity.
+- **STANDARD** — the full protocol as written. Default for non-trivial work.
+- **DEEP** — full protocol plus fresh-context review (see gap-analysis). Required for
+  Type 1 hard-to-reverse decisions: schemas, public API contracts, core data models,
+  infrastructure choices.
 
-| The task involves | READ THIS SUB-PROTOCOL |
+## Routing
+
+Identify **every** row that applies — protocols compose, they don't compete:
+
+| The task involves | Protocol |
 |---|---|
-| Starting any new design or feature | `problem-classification/SKILL.md` |
-| Architecture, module boundaries, build-vs-buy | `architecture-reasoning/SKILL.md` |
-| Authentication, authorization, crypto, input handling | `security-reasoning/SKILL.md` |
-| Choosing between options, trade-offs, priorities | `decision-analysis/SKILL.md` |
-| Debugging, investigating, diagnosing failures | `diagnostic-reasoning/SKILL.md` |
-| Writing, reviewing, or refactoring significant code | `code-quality-analysis/SKILL.md` |
-| Finalizing any design, plan, or recommendation | `gap-analysis/SKILL.md` |
-| Business strategy, market positioning, OKRs | `strategic-reasoning/SKILL.md` |
+| Starting any new design or feature | `problem-classification` |
+| Architecture, module boundaries, build-vs-buy | `architecture-reasoning` |
+| Auth, authorization, crypto, input handling, PII, payments | `security-reasoning` |
+| Choosing between options, trade-offs, priorities | `decision-analysis` |
+| Debugging, investigating, diagnosing failures | `diagnostic-reasoning` |
+| Writing, reviewing, or refactoring significant code | `code-quality-analysis` |
+| Business strategy, positioning, roadmap priorities | `strategic-reasoning` |
+| **Any** design, plan, or recommendation about to be final | `gap-analysis` — always last |
 
-To load a sub-protocol, run: `find ~/.claude -path "*/praxis/skills/[name]/SKILL.md" -exec cat {} \;`
-Then follow it completely before responding to the user.
+Ordering: `problem-classification` first when the work is new. `security-reasoning`
+whenever its row matches, in addition to the others. `gap-analysis` last, before
+anything is presented as final.
 
-If multiple rows match, invoke the FIRST match. Skills can chain — after completing one,
-check if another applies to the result.
+**Loading a protocol:** invoke it as a skill — `praxis:<name>` when installed as a
+plugin, `<name>` when skills are installed flat. If your harness has no skill
+invocation, read `skills/<name>/SKILL.md` from the PRAXIS directory and follow it
+as written.
 
-## How to invoke sub-protocols
+<HARD-GATE>
+The three invariants — everything else scales with the depth tier, these do not:
 
-The Skill tool loaded this meta-skill. To load a specific sub-protocol, find and read
-its SKILL.md file. Use bash:
+1. No non-trivial design, plan, or recommendation is presented as final without
+   gap-analysis.
+2. No code is written at a trust boundary without STRIDE from security-reasoning.
+3. Every analysis ends with a confidence level and the specific assumptions that
+   would change it.
+</HARD-GATE>
 
-```
-find ~/.claude -path "*/praxis/skills/[skill-name]/SKILL.md" -exec cat {} \;
-```
+## User override — informed consent
 
-For example, for problem-classification:
-```
-find ~/.claude -path "*/praxis/skills/problem-classification/SKILL.md" -exec cat {} \;
-```
+The user is the principal. If they ask to skip analysis:
 
-If that doesn't work, try: `cat "$(dirname "$(find ~/.claude -name 'using-praxis' -type d)")/problem-classification/SKILL.md"`
+1. State specifically what gets skipped and the concrete risk, in one line.
+2. Offer the QUICK tier as a 30-second alternative.
+3. Then follow their call, and note the waiver in your output.
 
-After reading the sub-protocol, follow it step by step as written. Do not summarize.
-Do not skip steps. Do not paraphrase. Execute each gate in order.
+Never silently comply, and never overrule.
 
-## Confidence reporting
+## Autonomous mode
 
-Every PRAXIS analysis MUST end with a confidence assessment:
+When no user is available to answer (headless, CI, cron, subagent), do not stall on a
+confirmation gate: state the assumption you are making in writing, proceed, cap
+confidence at MEDIUM, and surface the open questions at the end of your output.
 
-- **HIGH (90%+):** Multiple independent checks passed. You would bet your job on this.
-- **MEDIUM (70-89%):** Reasoning is sound but has unverified assumptions. List them.
-- **LOW (50-69%):** Significant uncertainty. State what information would raise confidence.
-- **INSUFFICIENT (<50%):** Cannot make a reliable recommendation. Escalate to human.
+## Anti-theater check
 
-## Superpowers handoff (MANDATORY when Superpowers is installed)
+A protocol run only counts if it could have changed something. After completing any
+protocol, name the check that altered your approach. If nothing changed, either show
+the evidence that the original approach survived genuine scrutiny, or rerun the
+weakest check adversarially. Filling templates with plausible filler is a protocol
+violation, not compliance.
 
-Check if Superpowers skills are available by running: `Skill(superpowers)`
-If Superpowers is installed, you MUST hand off to it at these specific moments.
-Do NOT let PRAXIS own the entire conversation. PRAXIS reasons. Superpowers executes.
+## Confidence scale
 
-### Handoff sequence
+- **HIGH (90%+)** — multiple independent checks passed; evidence cited.
+- **MEDIUM (70–89%)** — reasoning is sound; unverified assumptions listed.
+- **LOW (50–69%)** — significant uncertainty; state what information would raise it.
+- **INSUFFICIENT (<50%)** — do not recommend; escalate to the user.
 
-After completing `problem-classification` and gathering user constraints:
-→ Invoke `Skill(superpowers:brainstorming)` and pass your classification, frameworks,
-  and constraints as context. Let Superpowers drive the design conversation.
-  Do NOT continue designing inside PRAXIS. Hand off NOW.
+## Superpowers integration
 
-After Superpowers brainstorming produces a design:
-→ Invoke PRAXIS `gap-analysis` (read the sub-protocol via bash). Run the 7 checks
-  against the design Superpowers produced. Report findings to the user.
-
-After gap-analysis approves the design:
-→ Invoke `Skill(superpowers:writing-plans)` to create the implementation plan.
-  Do NOT write the plan inside PRAXIS. Hand off NOW.
-
-During implementation (Superpowers handles TDD/subagents):
-→ PRAXIS stays quiet. Let Superpowers execute.
-
-When Superpowers triggers code review:
-→ PRAXIS `code-quality-analysis` and `security-reasoning` augment the review.
-  Run both, then let Superpowers' code-reviewer agent finalize.
-
-When debugging:
-→ PRAXIS `diagnostic-reasoning` runs first (5 hypotheses, discriminating test).
-  Then invoke `Skill(superpowers:systematic-debugging)` to execute the investigation.
-
-### The rule
-
-Never let PRAXIS replace Superpowers. PRAXIS adds reasoning THEN hands off.
-If you find yourself doing brainstorming, plan-writing, or code execution inside
-PRAXIS when Superpowers is available — STOP. You are supposed to hand off.
-PRAXIS thinks. Superpowers does.
-
-<RATIONALIZATION-CATCHING>
-If you find yourself thinking any of these, you are about to violate the protocol:
-
-- "I can handle this directly" — No. Invoke the skill.
-- "This is straightforward enough" — If it matched the non-trivial list, invoke the skill.
-- "The user wants a quick answer" — A 30-second skill invocation prevents a 2-week mistake.
-- "I already know the right approach" — The skill catches what confidence alone misses.
-- "Let me just ask clarifying questions first" — The skill's gates ARE the clarifying questions.
-- "This doesn't need the full protocol" — You don't get to decide that. The gate does.
-</RATIONALIZATION-CATCHING>
+If the Superpowers plugin is installed, PRAXIS reasons and Superpowers executes. Read
+`superpowers-handoff.md` in this skill's directory for the exact handoff points.
