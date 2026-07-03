@@ -4,7 +4,7 @@
 
 **A reasoning methodology plugin for AI coding agents.**
 
-Praxis makes your agent think before it acts — classifying problems, selecting from 45 reasoning frameworks, enforcing cognitive checklists, and validating solutions before execution. It works standalone or alongside [Superpowers](https://github.com/obra/superpowers).
+Praxis makes your agent think before it acts — classifying problems, selecting the right reasoning frameworks for the problem type, enforcing cognitive checklists, and validating solutions before execution. It works standalone or alongside [Superpowers](https://github.com/obra/superpowers).
 
 Superpowers tells agents **how to execute**. Praxis tells agents **how to think**. Together, your agent reasons deeply *then* executes precisely.
 
@@ -48,7 +48,7 @@ Built through iterations of testing and tuning. Every critical test passes.
 | T4: Non-trivial activate | Fires problem-classification on design tasks |
 | G2: Gap analysis | Runs all 7 cognitive debiasing checks |
 | G3: Security auto-detect | Recognizes auth code without being told "security" |
-| G4: Adversarial skip | Holds gate when user says "skip analysis, just code" |
+| G4: Informed-consent skip | Names the skipped risk, offers the QUICK tier, then respects the user's call |
 | Q1: Diagnostic quality | 5 hypotheses + Strong Inference discriminating test |
 | Q2: Decision quality | Adds "do nothing," asks weights, steelmans the loser |
 | Q3: Code quality | Catches 17 violations including SQLi, MD5, no auth |
@@ -72,16 +72,49 @@ Each skill is a behavioral protocol with mandatory gates — not a reference doc
 
 ## Installation
 
-### Claude Code (Manual)
+### Claude Code (plugin — recommended)
+
+```
+/plugin marketplace add xD4O/praxis
+/plugin install praxis@praxis
+```
+
+Restart Claude Code. The router is injected at session start automatically.
+
+### Claude Code (manual)
+
+Skills must be copied **flat** — Claude Code discovers `~/.claude/skills/<name>/SKILL.md`,
+not nested directories:
 
 ```bash
-# Linux/Mac
-cp -r praxis ~/.claude/skills/praxis
-
-# Windows
-Drop the contents into: %USERPROFILE%\.claude\skills\praxis
+git clone https://github.com/xD4O/praxis
+cp -r praxis/skills/* ~/.claude/skills/
 ```
-Start a new Claude Code session. Praxis activates automatically on non-trivial tasks.
+
+Optionally register the session-start hook (plugin installs get this automatically) by
+adding to `~/.claude/settings.json`:
+
+```json
+{
+  "hooks": {
+    "SessionStart": [
+      {
+        "matcher": "startup|resume|clear|compact",
+        "hooks": [
+          { "type": "command", "command": "/absolute/path/to/praxis/hooks/session-start" }
+        ]
+      }
+    ]
+  }
+}
+```
+
+### Other agents and harnesses
+
+Praxis skills follow the open [Agent Skills](https://agentskills.io) format (`SKILL.md`),
+supported by Codex, Cursor, VS Code Copilot, Gemini CLI, and others — point your
+harness's skills directory at `skills/`. For harnesses without skill support, add the
+body of `skills/using-praxis/SKILL.md` to your `AGENTS.md` or system prompt as the router.
 
 ### With Superpowers
 
@@ -103,11 +136,11 @@ Praxis should activate problem-classification before any work begins. If it does
 
 ## How it works
 
-Praxis is injected at session start via a SessionStart hook. The meta-skill establishes a complexity gate — trivial tasks (fix a typo, rename a variable) skip reasoning entirely. Non-trivial tasks (design, debug, architecture, security) must invoke the matching skill before the agent responds.
+A slim router (~100 lines) is injected at session start via a SessionStart hook. It establishes a complexity gate — trivial tasks (fix a typo, rename a variable) skip reasoning entirely — and routes everything else to the matching protocol. Routing is compositional: a task can match several rows (a new security-sensitive feature runs problem-classification *and* security-reasoning, with gap-analysis always last), and three **depth tiers** (QUICK / STANDARD / DEEP) scale the rigor to irreversibility × blast radius, so a gut-check costs a minute while a schema decision gets fresh-context review.
 
-Each skill is a step-by-step protocol with `<HARD-GATE>` markers that prevent the agent from skipping steps. A `<RATIONALIZATION-CATCHING>` block in the meta-skill lists the exact thoughts agents have when they're about to skip reasoning — "I can handle this directly," "this is straightforward enough," "the user wants a quick answer" — and instructs the agent to recognize those impulses as the signal to invoke the skill, not skip it.
+Enforcement is deliberately concentrated instead of spread everywhere: one `<HARD-GATE>` in the router holds three invariants (no final recommendation without gap-analysis, no trust-boundary code without STRIDE, confidence stated on every analysis), and each protocol body keeps its own gates. Two failure modes are designed against explicitly: *skipping* — rationalization-catching names the exact thoughts agents have right before they skip ("I can handle this directly," "this is straightforward enough") and treats them as the signal to route; and *compliance theater* — an anti-theater check requires the agent to name which check actually changed its approach, because filling templates with plausible filler is a protocol violation, not compliance.
 
-The YAML frontmatter description is the primary enforcement layer. Claude Code only shows descriptions to the agent at all times — the full skill body loads only after invocation. Descriptions are written as mandatory commands ("You MUST invoke...Do NOT respond directly") rather than passive suggestions.
+The router also handles the two situations rigid protocols get wrong. **User override:** the user is the principal — if they say "skip the analysis," the agent states what's skipped and the concrete risk, offers the QUICK tier, then respects their call. **Autonomous mode:** in headless, CI, or subagent runs where no user can answer, gates that would ask for confirmation instead state their assumptions in writing, cap confidence at MEDIUM, and surface open questions at the end.
 
 ## What we learned building it
 
