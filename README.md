@@ -138,6 +138,21 @@ Help me design a notification service
 
 Praxis should activate problem-classification before any work begins. If it doesn't, ask: "What skills do you have access to?" to verify the plugin loaded.
 
+## Slash commands
+
+The router fires protocols automatically. These commands let you invoke one on demand — to force a protocol the router skipped, or to run a specific check against existing work. They are user-triggered only (the model won't auto-invoke them).
+
+| Command | Runs | Reach for it when |
+|---|---|---|
+| `/analyze` | problem-classification | Starting a new feature or design — before touching anything |
+| `/architect` | architecture-reasoning | Weighing a structural decision: boundaries, build-vs-buy, data model |
+| `/decide` | decision-analysis | Choosing between alternatives and you want the trade-off made explicit |
+| `/diagnose` | diagnostic-reasoning | A bug or failure needs root-causing before you change code |
+| `/estimate` | estimation | Committing to an effort, time, or cost number |
+| `/quality` | code-quality-analysis | Reviewing or refactoring a diff or a specific file |
+| `/threat-model` | security-reasoning | Any auth, crypto, input-handling, PII, or payments code or design |
+| `/validate` | gap-analysis | A design, plan, or recommendation is about to be called final |
+
 ## How it works
 
 A slim router (~100 lines) is injected at session start via a SessionStart hook. It establishes a complexity gate — trivial tasks (fix a typo, rename a variable) skip reasoning entirely — and routes everything else to the matching protocol. Routing is compositional: a task can match several rows (a new security-sensitive feature runs problem-classification *and* security-reasoning, with gap-analysis always last), and three **depth tiers** (QUICK / STANDARD / DEEP) scale the rigor to irreversibility × blast radius, so a gut-check costs a minute while a schema decision gets fresh-context review.
