@@ -27,12 +27,14 @@ Work through each. Mark PASS, FAIL, or N/A. Do not skip any applicable check.
 - Booleans read as questions: `isValid`, `hasPermission`, `canExecute`.
 - No abbreviations a new reader couldn't understand.
 
-**2. FUNCTION SIZE** — Is every function under 20 lines?
-- If over 20 lines, it does more than one thing. Extract methods.
+**2. FUNCTION SIZE** — Does every function do exactly one thing?
+- Length is the smell: past ~20 lines a function has usually accreted a second job.
+  Extract methods. (A long but irreducible unit — e.g. a flat dispatch table — can pass.)
 - Can you describe what the function does without the word "and"?
 
 **3. NESTING DEPTH** — Is anything nested deeper than 2 levels?
-- If yes, flatten with guard clauses. Return early for invalid cases.
+- Every nesting level is a condition the reader must hold in their head at once.
+  Flatten with guard clauses. Return early for invalid cases.
 - Happy path should be at indent level 1.
 
 ### Structure
@@ -43,7 +45,8 @@ Work through each. Mark PASS, FAIL, or N/A. Do not skip any applicable check.
 
 **5. COUPLING** — Can you change module A without touching module B?
 - Count the imports. More imports = more coupling.
-- Are there method chains longer than 2 dots? (Law of Demeter violation)
+- Are there method chains longer than 2 dots? Each extra dot couples this code to
+  another object's internals (Law of Demeter).
 
 **6. COHESION** — Is everything inside this module related to the same concern?
 - Would removing any function make the module incomplete?
@@ -73,7 +76,9 @@ Work through each. Mark PASS, FAIL, or N/A. Do not skip any applicable check.
 
 **11. IMMUTABILITY** — Is data mutated, or are new copies created?
 - Prefer `const` over `let`. Prefer `map/filter/reduce` over mutating loops.
-- Never modify function arguments. Return new objects.
+- Don't mutate function arguments — callers don't expect their data to change out from
+  under them. Return new objects, unless the function's documented contract is in-place
+  mutation for a measured hotspot.
 
 **12. SURPRISE CHECK** — Would a reader be surprised by ANY behavior?
 - Read only the function signature. Predict what it does. Check.
@@ -83,7 +88,8 @@ Work through each. Mark PASS, FAIL, or N/A. Do not skip any applicable check.
 
 **13. COMPOSITION** — Is inheritance used where composition would work?
 - "Has-a" is almost always better than "is-a."
-- If the inheritance hierarchy is deeper than 2 levels, refactor to composition.
+- Hierarchies deeper than 2 levels couple every subclass to every ancestor's
+  implementation — a change anywhere ripples everywhere. Refactor to composition.
 
 **14. ORTHOGONALITY** — If you change feature X, how many other files change?
 - Ideal answer: 1 (the file implementing X).

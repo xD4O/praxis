@@ -62,7 +62,9 @@ Produce a table:
 
 ## STEP 4 — Top 3 risks
 
-From the table, identify the 3 highest-severity unmitigated threats.
+From the table, identify the highest-severity unmitigated threats — at least the top 3,
+plus every threat rated Critical even if that exceeds 3. Capping at a count is how
+critical threats get left off the list.
 For each, state the specific mitigation required before this code ships.
 
 <HARD-GATE>

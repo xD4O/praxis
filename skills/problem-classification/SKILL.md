@@ -48,7 +48,9 @@ If the user hasn't specified a constraint, ask. Do not assume.
 
 ## GATE 3 — Select reasoning frameworks
 
-Based on the problem type, select 2-3 frameworks. Do not select more than 3.
+Based on the problem type, select at least 2 frameworks that materially change how you
+will approach this problem. Stop adding once another framework would not change the
+reasoning — the ceiling is judgment, not a count.
 
 | Problem type | Primary framework | Supporting frameworks |
 |---|---|---|

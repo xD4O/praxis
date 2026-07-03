@@ -26,7 +26,8 @@ whenever the decision is hard to reverse.
 
 Ask: "How would I guarantee this fails?"
 
-List 3 specific failure modes. For each, verify your solution prevents it.
+List at least 3 specific failure modes; keep listing while distinct ones come to mind,
+stop when candidates turn contrived. For each, verify your solution prevents it.
 If any failure mode is not prevented, flag it as an open risk.
 
 ## CHECK 2 — Second-order consequences
@@ -51,8 +52,8 @@ addressed. Gaps are where surprises live.
 
 Ask: "Where does my model diverge from reality?"
 
-List 3 things you simplified, assumed, or ignored. For each, state the risk
-if reality differs from your model.
+List at least 3 things you simplified, assumed, or ignored — more if you know of them.
+For each, state the risk if reality differs from your model.
 
 ## CHECK 5 — Adversarial
 
@@ -81,7 +82,7 @@ After completing all 7 checks, summarize:
 
 ```
 GAP ANALYSIS COMPLETE
-├── Inversion: [X/3 failure modes mitigated] [open risks if any]
+├── Inversion: [X/Y failure modes mitigated] [open risks if any]
 ├── Second-order: [acceptable / requires changes]
 ├── MECE: [complete / gap in: ___]
 ├── Map vs territory: [top risk: ___]

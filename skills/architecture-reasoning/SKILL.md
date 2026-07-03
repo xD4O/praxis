@@ -45,7 +45,7 @@ For each major component in the design, ask:
 | Does a well-maintained OSS/SaaS solution exist? | Evaluate adopting it |
 | Is this a commodity capability (auth, email, storage, logging)? | Buy/adopt, don't build |
 | Is this your core differentiator? | Build it — this is where your value lives |
-| Will you need to customize it beyond what exists? | Build if customization > 40% |
+| Will you need to customize it beyond what exists? | Build if you'd be modifying its core rather than configuring its edges — a deep fork costs more than owning the code |
 
 State each component's classification: BUILD / BUY / ADOPT.
 

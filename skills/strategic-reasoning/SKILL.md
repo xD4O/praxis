@@ -70,7 +70,8 @@ that requires the same rigor as starting things.
 For the recommended strategy, define OKRs:
 
 **Objective:** Qualitative, inspiring, one sentence.
-**Key Results:** 2-3 quantitative measures. Each must be:
+**Key Results:** at least 2 quantitative measures — add more only while each new KR
+tracks a distinct dimension of success; overlapping KRs measure nothing new. Each must be:
 - Specific (exact metric, exact target)
 - Measurable (can verify with a dashboard or report)
 - Time-bound (by when)
@@ -87,7 +88,7 @@ STRATEGIC ANALYSIS
 ├── Differentiation: [one sentence]
 ├── Top priority: [what to do first and why]
 ├── Kill list: [what to stop doing]
-├── OKR: [objective + 2-3 key results]
+├── OKR: [objective + 2+ key results]
 └── Confidence: [HIGH / MEDIUM / LOW]
 ```
 

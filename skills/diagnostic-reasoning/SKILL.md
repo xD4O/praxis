@@ -30,7 +30,9 @@ another engineer could verify independently.
 
 ## PHASE 2 — Generate competing hypotheses
 
-Produce exactly 5 hypotheses. Not 1. Not 3. Five.
+Produce at least 5 hypotheses. Fewer and you are anchored on your first guess rather
+than diagnosing. Add more if the observations genuinely suggest them; stop when new
+candidates are restatements of ones you already have, not at a count.
 
 For each hypothesis, state:
 - What it would explain
