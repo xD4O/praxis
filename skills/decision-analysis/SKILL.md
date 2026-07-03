@@ -86,6 +86,36 @@ RECOMMENDATION: [Option X]
 If confidence is LOW, state what additional information would increase it,
 and recommend gathering that information before committing.
 
+## STEP 7 — Journal the decision, calibrate confidence
+
+Stated confidence means nothing if nobody ever checks it against reality. Close
+that loop. If journaling is impractical here (no project workspace, one-off
+headless task), say so and skip this step — never block a recommendation on it.
+
+**7a — Append.** Add one JSON line to `.praxis/decisions.jsonl` in the project
+root (create it if missing). One tool call, minimal schema:
+
+```json
+{"date":"2026-07-03","decision":"<one sentence>","chosen_option":"X","confidence":"MEDIUM","key_risk":"<from STEP 6>","revisit_by":"2026-09-01","outcome":null}
+```
+
+`revisit_by` is a date or concrete trigger ("after v2 ships") for checking how
+the decision turned out. `outcome` stays `null` until known.
+
+**7b — Revisit nudge.** If `.praxis/decisions.jsonl` exists, check it early
+(at STEP 1, before recommending) for entries with `outcome: null` whose
+`revisit_by` has passed. Tell the user: "N past decisions are due for a
+confidence check." This is a nudge only — old unresolved entries NEVER block
+the current decision.
+
+**7c — Calibrate.** When a journaled decision's outcome becomes known (the user
+reports back, or you observe the result), set that entry's `outcome` to
+"held" / "failed" plus one sentence on what happened — the only permitted edit
+to past lines. Then compare stated confidence against results: are HIGH calls
+holding most of the time? Did LOW calls fail the way `key_risk` predicted? Use
+the pattern to adjust FUTURE confidence estimates. This is calibration for
+better future calls, not scoring of past ones.
+
 <HARD-GATE>
 Do NOT recommend an option without:
 - At least 3 options evaluated (including "do nothing")
@@ -93,11 +123,16 @@ Do NOT recommend an option without:
 - Second-order consequences considered for the recommendation
 - Confidence level stated
 
+STEP 7 journaling is best-effort, not a gate: if `.praxis/` doesn't exist or
+journaling isn't practical, skip it gracefully — never withhold a recommendation
+over it.
+
 This skill prevents:
 - "Let's just go with X" without evaluating alternatives
 - Anchoring on the first option considered
 - Ignoring "do nothing" as a valid choice
 - Making irreversible decisions with reversible-decision rigor
+- Confidence levels that are never checked against outcomes
 </HARD-GATE>
 
 ## Superpowers handoff
