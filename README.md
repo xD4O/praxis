@@ -3,9 +3,9 @@
 
 **PRAXIS - A reasoning methodology plugin for AI coding agents.**
 
-Praxis makes your agent think before it acts — classifying problems, selecting the right reasoning frameworks for the problem type, enforcing cognitive checklists, and validating solutions before execution. It works standalone or alongside [Superpowers](https://github.com/obra/superpowers).
+Praxis makes your agent think before it acts — classifying problems, selecting the right reasoning frameworks for the problem type, enforcing cognitive checklists, and validating solutions before execution.
 
-Superpowers tells agents **how to execute**. Praxis tells agents **how to think**. Together, your agent reasons deeply *then* executes precisely.
+Praxis tells agents **how to think** — the approach, not just the answer. It reasons deeply *before* anything gets built, so the agent commits to a direction only after the problem is framed and the design is validated.
 
 ![How Praxis Works](assets/workflow.png)
 
@@ -52,7 +52,6 @@ Built through iterations of testing and tuning. Every critical test passes.
 | Q2: Decision quality | Adds "do nothing," asks weights, steelmans the loser |
 | Q3: Code quality | Catches 17 violations including SQLi, MD5, no auth |
 | Q4: Architecture quality | Reversibility, boundary analysis, bottleneck ID |
-| S1: Superpowers handoff | Praxis reasons first, then Superpowers executes |
 
 ## The 13 skills
 
@@ -120,14 +119,6 @@ supported by Codex, Cursor, VS Code Copilot, Gemini CLI, and others — point yo
 harness's skills directory at `skills/`. For harnesses without skill support, add the
 body of `skills/using-praxis/SKILL.md` to your `AGENTS.md` or system prompt as the router.
 
-### With Superpowers
-
-Install both. They compose automatically — Praxis reasons first, then hands off to Superpowers for TDD, subagent execution, and git workflow.
-
-```
-/plugin install superpowers@claude-plugins-official
-```
-
 ### Verify
 
 Ask for something non-trivial:
@@ -169,7 +160,7 @@ Six iterations from a passive reference that agents ignored to behavioral enforc
 2. **Sub-skill namespaces don't resolve locally.** `Skill(praxis)` works. `Skill(praxis:sub-name)` doesn't. Sub-protocols load via bash file reads.
 3. **HARD-GATEs work — but only after invocation.** The description must compel invocation; body gates are second-line defense.
 4. **Agents adapt protocol intensity to context.** Under time pressure, the agent runs compressed STRIDE instead of full ceremony. This is correct behavior.
-5. **Handoff instructions must be explicit.** "Superpowers brainstorms with Praxis analysis" (prose) didn't cause handoff. "Invoke Skill(superpowers:brainstorming) NOW" (command) did.
+5. **Instructions to invoke another skill must be explicit commands.** Prose like "brainstorm using the analysis above" didn't trigger invocation. An explicit "Invoke Skill(<name>) NOW" did.
 
 ## Philosophy
 
@@ -177,7 +168,7 @@ Six iterations from a passive reference that agents ignored to behavioral enforc
 - **Reason before executing.** The approach matters as much as the implementation.
 - **Mandatory checkpoints.** HARD-GATEs prevent skipping steps that catch expensive mistakes.
 - **Confidence calibration.** Every analysis states its confidence level. Uncertainty is explicit, not hidden.
-- **Composability.** Works alone. Works better with Superpowers. Never replaces execution skills.
+- **Composability.** A reasoning layer, not an execution engine. It reasons, then hands off to whatever builds and ships — it never replaces execution skills.
 
 ## Contributing
 
