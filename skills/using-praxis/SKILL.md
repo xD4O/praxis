@@ -66,7 +66,9 @@ as final.
 **Loading a protocol:** invoke it as a skill — `praxis:<name>` when installed as a
 plugin, `<name>` when skills are installed flat. If your harness has no skill
 invocation, read `skills/<name>/SKILL.md` from the PRAXIS directory and follow it
-as written.
+as written. If you can neither invoke nor read it, run the protocol inline from
+what this router says about it, in this same turn — announcing that you will load
+a protocol is not running it, and stopping after the announcement is a violation.
 
 <HARD-GATE>
 The three invariants — everything else scales with the depth tier, these do not:
@@ -83,7 +85,8 @@ The three invariants — everything else scales with the depth tier, these do no
 The user is the principal. If they ask to skip analysis:
 
 1. State specifically what gets skipped and the concrete risk, in one line.
-2. Offer the QUICK tier as a 30-second alternative.
+2. Offer the QUICK tier as a 30-second alternative — the offer is part of informed
+   consent, not optional politeness; skipping it is silent compliance.
 3. Then follow their call, and note the waiver in your output.
 
 Never silently comply, and never overrule.

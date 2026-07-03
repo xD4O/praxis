@@ -25,8 +25,14 @@ Before changing anything, produce a baseline measurement:
 - **Result:** the current value, plus variance across at least 3 runs
 - **Bottleneck:** the specific function, query, or resource the profile names as dominant
 
-Do NOT proceed on intuition ("it's probably the DB"). If you cannot run a profiler or
-benchmark, add measurement instrumentation FIRST — that is the first task, not optional.
+Do NOT proceed on intuition ("it's probably the DB"). "It's structural, I don't need a
+profile" is the same intuition in better clothes — an N+1 pattern, a nested loop, a
+chatty API are hypotheses about cost until a measurement says they dominate. If you
+cannot run a profiler or benchmark, add measurement instrumentation FIRST — that is
+the first task, not optional. Sequencing is the discipline: do NOT present rewritten
+code before this step is complete. When measurement is impossible in your context,
+the deliverable is the measurement plan first, then a fix labeled HYPOTHESIS —
+measurement bolted on after the rewrite as "verification" is this step skipped.
 
 ## STEP 2 — Identify the single binding constraint
 
@@ -91,6 +97,8 @@ Do NOT claim a performance fix is done until:
 
 Red flags that this skill catches:
 - "This is obviously the slow part" — Profile it. Obvious suspects are wrong constantly.
+- "The pattern is structural, so no profile is needed" — structural patterns are
+  hypotheses about cost; plenty don't dominate the metric they're blamed for.
 - "I optimized the loop, it should be faster now" — "Should be" is not a measurement.
 - "The micro-benchmark shows 10x" — Against the STEP 1 method, or a friendlier one?
 - "No downside" — You traded memory, readability, or generality. Name it.
