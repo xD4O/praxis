@@ -1,0 +1,78 @@
+#!/usr/bin/env bash
+# PRAXIS UserPromptSubmit hook — deterministic, zero-LLM-cost classifier nudge.
+#
+# Reads the UserPromptSubmit JSON from stdin, matches the prompt text against
+# high-precision keyword rules mirroring the router's routing table
+# (skills/using-praxis/SKILL.md), and prints at most 3 one-line routing hints
+# to stdout (injected as additional context). The hints nudge; the router
+# decides. On no match, malformed input, or any error: prints nothing, exit 0.
+# This hook NEVER blocks a prompt.
+#
+# Opt-in adapter — not registered by the plugin's hooks/hooks.json.
+# Register it yourself; see adapters/README.md.
+
+INPUT="$(cat 2>/dev/null || true)"
+[ -n "$INPUT" ] || exit 0
+command -v python3 >/dev/null 2>&1 || exit 0
+
+export PRAXIS_HOOK_INPUT="$INPUT"
+python3 - <<'PY' 2>/dev/null
+import json, os, re, sys
+
+try:
+    data = json.loads(os.environ.get("PRAXIS_HOOK_INPUT", ""))
+except Exception:
+    sys.exit(0)
+if not isinstance(data, dict):
+    sys.exit(0)
+
+# Claude Code UserPromptSubmit input carries the text in "prompt";
+# accept "user_prompt" defensively in case the field name differs.
+prompt = data.get("prompt") or data.get("user_prompt") or ""
+if not isinstance(prompt, str) or not prompt.strip():
+    sys.exit(0)
+
+# High-precision (deliberately low-recall) rules, one per routing-table row.
+# intent-alignment and gap-analysis are ordering rules, not keyword-matchable
+# rows, so they have no rule here — the router itself enforces them.
+RULES = [
+    (r"\b(design|architect|build|implement)\b|\bnew feature\b",
+     "Starting any new design or feature", "problem-classification"),
+    (r"\b(architecture|module boundar\w*|microservices?|monolith)\b|\bbuild[- ]vs[- ]buy\b",
+     "Architecture, module boundaries, build-vs-buy", "architecture-reasoning"),
+    (r"\b(auth\w*|password\w*|token|crypt\w*|encrypt\w*|PII|payment\w*|secrets?|login|OAuth|JWT|CSRF|XSS|saniti[sz]\w*)\b",
+     "Auth, authorization, crypto, input handling, PII, payments", "security-reasoning"),
+    (r"\btrade[- ]?offs?\b|\bpros and cons\b|\bchoose between\b|\bwhich (one|option|approach|framework|library|database)\b|\bshould (we|i) (use|pick|choose|go with)\b|\bprioriti[sz]e\b",
+     "Choosing between options, trade-offs, priorities", "decision-analysis"),
+    (r"\b(debug\w*|broken|failing|crash\w*|stack ?trace|root.?cause|segfault|intermittent)\b|\bnot working\b|\b(500|502|503) error\b|\berror 50[0-9]\b",
+     "Debugging, investigating, diagnosing failures", "diagnostic-reasoning"),
+    (r"\b(slow|latency|optimi[sz]\w*|faster|throughput|bottleneck\w*)\b|\bmemory leak\b",
+     "Making working code faster, cheaper, or smaller", "performance-reasoning"),
+    (r"\btest (plan|strategy|coverage)\b|\bwhat (to|should \w+ )test\b|\bregression test\w*\b|\bflaky\b|\bverify (the|this|my) fix\b",
+     "Deciding what to test; verifying a bug fix is real", "testing-strategy"),
+    (r"\b(estimat\w*|effort|timeline|ballpark|story points)\b|\bhow long (will|would|does|until)\b",
+     "Committing to an effort, time, or cost estimate", "estimation"),
+    (r"\brefactor\w*\b|\bcode review\b|\breview (this|my|the|that) (code|pr|diff|change\w*)\b|\bclean ?up\b",
+     "Writing, reviewing, or refactoring significant code", "code-quality-analysis"),
+    (r"\b(roadmap|strateg\w*|positioning|competitors?|OKRs?)\b|\bgo[- ]to[- ]market\b",
+     "Business strategy, positioning, roadmap priorities", "strategic-reasoning"),
+    (r"\bpraxis skill\b|\bSKILL\.md\b|\bnew skill\b",
+     "Creating or modifying a PRAXIS-format skill itself", "skill-creation"),
+]
+
+hints = []
+for pattern, row, skill in RULES:
+    if re.search(pattern, prompt, re.IGNORECASE):
+        hints.append(
+            "PRAXIS routing hint: this prompt matches the '%s' row — the %s protocol applies."
+            % (row, skill)
+        )
+    if len(hints) == 3:
+        break
+
+if hints:
+    print("\n".join(hints))
+sys.exit(0)
+PY
+
+exit 0

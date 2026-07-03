@@ -1,0 +1,93 @@
+#!/usr/bin/env bash
+# PRAXIS Stop hook — deterministic backstop for HARD-GATE invariant 3:
+# "Every analysis ends with a confidence level."
+#
+# Reads the Stop-hook JSON from stdin, loads the LAST assistant message from
+# the transcript JSONL, and applies a cheap heuristic: if the message is long
+# (>1500 chars) AND contains analysis markers (recommend / approach /
+# trade-off / risk) AND contains NO confidence marker, it blocks the stop
+# once (exit 2 + one-line stderr reason) so the agent adds a confidence level.
+#
+# This is a nudge-once backstop, not a jail:
+#   - If stop_hook_active is true (the agent is already continuing because a
+#     Stop hook fired), it ALWAYS exits 0 — prevents infinite loops.
+#   - Any parse error, missing file, or missing python3 → exit 0.
+#
+# Opt-in adapter — not registered by the plugin's hooks/hooks.json.
+# Register it yourself; see adapters/README.md.
+
+INPUT="$(cat 2>/dev/null || true)"
+[ -n "$INPUT" ] || exit 0
+command -v python3 >/dev/null 2>&1 || exit 0
+
+export PRAXIS_HOOK_INPUT="$INPUT"
+python3 - <<'PY' 2>/dev/null
+import json, os, re, sys
+
+try:
+    data = json.loads(os.environ.get("PRAXIS_HOOK_INPUT", ""))
+except Exception:
+    sys.exit(0)
+if not isinstance(data, dict):
+    sys.exit(0)
+
+# Loop prevention: if we're already continuing because a Stop hook fired,
+# never block again.
+if data.get("stop_hook_active"):
+    sys.exit(0)
+
+transcript_path = data.get("transcript_path")
+if not isinstance(transcript_path, str) or not transcript_path:
+    sys.exit(0)
+
+last_assistant = None
+try:
+    with open(transcript_path, "r", encoding="utf-8", errors="replace") as f:
+        for line in f:
+            line = line.strip()
+            if not line:
+                continue
+            try:
+                entry = json.loads(line)
+            except Exception:
+                continue
+            if isinstance(entry, dict) and entry.get("type") == "assistant":
+                last_assistant = entry
+except Exception:
+    sys.exit(0)
+
+if last_assistant is None:
+    sys.exit(0)
+
+# Extract the text of the message. Transcript lines wrap the API message in
+# "message"; content is either a string or a list of content blocks.
+message = last_assistant.get("message") or {}
+content = message.get("content", "")
+if isinstance(content, str):
+    text = content
+elif isinstance(content, list):
+    text = " ".join(
+        block.get("text", "")
+        for block in content
+        if isinstance(block, dict) and block.get("type") == "text"
+    )
+else:
+    sys.exit(0)
+
+# Heuristic gate — all three must hold to block:
+if len(text) <= 1500:
+    sys.exit(0)
+if not re.search(r"\b(recommend(ation)?s?|approach(es)?|trade[- ]?offs?|risks?)\b", text, re.IGNORECASE):
+    sys.exit(0)
+if re.search(r"confidence[:\s]|HIGH \(|MEDIUM \(|LOW \(|INSUFFICIENT", text, re.IGNORECASE):
+    sys.exit(0)
+
+sys.exit(2)
+PY
+rc=$?
+
+if [ "$rc" = "2" ]; then
+  echo "PRAXIS gate: analysis output missing a confidence level — add one (HIGH/MEDIUM/LOW + assumptions) before finishing." >&2
+  exit 2
+fi
+exit 0
