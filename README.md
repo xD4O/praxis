@@ -55,7 +55,7 @@ Built through iterations of testing and tuning. Every critical test passes.
 | Q4: Architecture quality | Reversibility, boundary analysis, bottleneck ID |
 | S1: Superpowers handoff | Praxis reasons first, then Superpowers executes |
 
-## The 12 skills
+## The 13 skills
 
 Each skill is a behavioral protocol with mandatory gates — not a reference document to browse.
 
@@ -73,6 +73,7 @@ Each skill is a behavioral protocol with mandatory gates — not a reference doc
 | **performance-reasoning** | Baseline before changes, Theory of Constraints, same-methodology verification | Making working code faster, cheaper, or smaller |
 | **testing-strategy** | Test-type classification, high-value failure modes, fail-then-pass regression proof | Deciding what to test; verifying a bug fix is real |
 | **estimation** | Bounded decomposition, reference-class forecasting, explicit ranges and padding | Before committing to effort, time, or cost |
+| **skill-authoring** | Gap named with incident, trigger tested against false positives, adversarial pressure-test | Creating or rewriting an agent skill |
 
 ## Installation
 

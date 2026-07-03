@@ -55,6 +55,7 @@ Identify **every** row that applies — protocols compose, they don't compete:
 | Committing to an effort, time, or cost estimate | `estimation` |
 | Writing, reviewing, or refactoring significant code | `code-quality-analysis` |
 | Business strategy, positioning, roadmap priorities | `strategic-reasoning` |
+| Creating or rewriting an agent skill (SKILL.md) | `skill-authoring` |
 | **Any** design, plan, or recommendation about to be final | `gap-analysis` — always last |
 
 Ordering: `intent-alignment` first whenever the request is ambiguous, then
