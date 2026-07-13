@@ -53,7 +53,7 @@ Built through iterations of testing and tuning. Every critical test passes.
 | Q3: Code quality | Catches 17 violations including SQLi, MD5, no auth |
 | Q4: Architecture quality | Reversibility, boundary analysis, bottleneck ID |
 
-## The 13 skills
+## The 18 skills
 
 Each skill is a behavioral protocol with mandatory gates — not a reference document to browse.
 
@@ -72,6 +72,11 @@ Each skill is a behavioral protocol with mandatory gates — not a reference doc
 | **testing-strategy** | Test-type classification, high-value failure modes, fail-then-pass regression proof | Deciding what to test; verifying a bug fix is real |
 | **estimation** | Bounded decomposition, reference-class forecasting, explicit ranges and padding | Before committing to effort, time, or cost |
 | **skill-authoring** | Gap named with incident, trigger tested against false positives, adversarial pressure-test | Creating or rewriting an agent skill |
+| **scoping** | MUST/SHOULD/WON'T split, non-empty cut list, acceptance criteria on every MUST | Turning a vague ask into an MVP boundary |
+| **project-planning** | Testable done-criterion per task, explicit dependencies, riskiest work sequenced first | Turning a settled goal into a sequenced plan |
+| **domain-modeling** | Entity invariants, lifecycle ownership, illegal states made unrepresentable | Designing a data model, schema, or entities |
+| **codebase-comprehension** | Entry points, data-flow trace, full blast radius before an edit | Changing code you didn't write or don't yet understand |
+| **prompt-design** | Task spec, named failure modes, ≥3 adversarial tests before shipping | Writing or revising a reusable prompt |
 
 ## Installation
 
@@ -137,10 +142,15 @@ The router fires protocols automatically. These commands let you invoke one on d
 |---|---|---|
 | `/analyze` | problem-classification | Starting a new feature or design — before touching anything |
 | `/architect` | architecture-reasoning | Weighing a structural decision: boundaries, build-vs-buy, data model |
+| `/comprehend` | codebase-comprehension | Changing code you didn't write — map the blast radius first |
 | `/decide` | decision-analysis | Choosing between alternatives and you want the trade-off made explicit |
 | `/diagnose` | diagnostic-reasoning | A bug or failure needs root-causing before you change code |
+| `/domain` | domain-modeling | Designing a schema or the core entities of a system |
 | `/estimate` | estimation | Committing to an effort, time, or cost number |
+| `/plan` | project-planning | Turning a settled goal into a sequenced build plan |
+| `/prompt` | prompt-design | Writing or revising a reusable prompt or agent instruction |
 | `/quality` | code-quality-analysis | Reviewing or refactoring a diff or a specific file |
+| `/scope` | scoping | Deciding what's in and out of a first version |
 | `/threat-model` | security-reasoning | Any auth, crypto, input-handling, PII, or payments code or design |
 | `/validate` | gap-analysis | A design, plan, or recommendation is about to be called final |
 
