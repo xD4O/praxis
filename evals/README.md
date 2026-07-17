@@ -16,7 +16,7 @@ strict JSON verdict.
 
 ```sh
 cd evals
-./run.sh                 # all cases (T2.1–T2.10, sequential)
+./run.sh                 # all cases (T2.1–T2.27, sequential)
 ./run.sh T2.4            # one case
 ./run.sh T2.1 T2.9       # a subset
 ./run.sh --list          # print case IDs and titles, no model calls
