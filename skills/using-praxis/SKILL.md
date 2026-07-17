@@ -58,6 +58,7 @@ Identify **every** row that applies — protocols compose, they don't compete:
 | Committing to an effort, time, or cost estimate | `estimation` |
 | Writing, reviewing, or refactoring significant code | `code-quality-analysis` |
 | Changing code you did not write or do not yet understand | `codebase-comprehension` |
+| Designing or significantly changing a user-facing interface, visual direction, information hierarchy, or interaction flow; judging UI taste or coherence | `interface-design-reasoning` — MUST state this exact selection, then load it before the recommendation |
 | Writing or revising a reusable prompt, system prompt, or agent instruction | `prompt-design` |
 | Business strategy, positioning, roadmap priorities | `strategic-reasoning` |
 | Creating or rewriting an agent skill (SKILL.md) | `skill-authoring` |
@@ -66,8 +67,11 @@ Identify **every** row that applies — protocols compose, they don't compete:
 Ordering: `intent-alignment` first whenever the request is ambiguous, then
 `problem-classification` when the work is new. `scoping` before `project-planning` —
 draw the boundary before sequencing the work inside it. `codebase-comprehension` before
-editing code you did not write. `security-reasoning` whenever its row matches, in
-addition to the others. `gap-analysis` last, before anything is presented as final.
+`interface-design-reasoning` when changing an unfamiliar existing UI. Before making any
+significant interface recommendation, state `Selected protocol: interface-design-reasoning`,
+then load it.
+`security-reasoning` whenever its row matches, in addition to the others. `gap-analysis`
+last, before anything is presented as final.
 
 **Loading a protocol:** invoke it as a skill — `praxis:<name>` when installed as a
 plugin, `<name>` when skills are installed flat. If your harness has no skill

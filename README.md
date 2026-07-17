@@ -53,7 +53,7 @@ Built through iterations of testing and tuning. Every critical test passes.
 | Q3: Code quality | Catches 17 violations including SQLi, MD5, no auth |
 | Q4: Architecture quality | Reversibility, boundary analysis, bottleneck ID |
 
-## The 18 skills
+## The 19 skills
 
 Each skill is a behavioral protocol with mandatory gates — not a reference document to browse.
 
@@ -76,6 +76,7 @@ Each skill is a behavioral protocol with mandatory gates — not a reference doc
 | **project-planning** | Testable done-criterion per task, explicit dependencies, riskiest work sequenced first | Turning a settled goal into a sequenced plan |
 | **domain-modeling** | Entity invariants, lifecycle ownership, illegal states made unrepresentable | Designing a data model, schema, or entities |
 | **codebase-comprehension** | Entry points, data-flow trace, full blast radius before an edit | Changing code you didn't write or don't yet understand |
+| **interface-design-reasoning** | Experience thesis, state map, alternatives, operational taste gate, rendered verification plan | Designing or judging significant user interfaces |
 | **prompt-design** | Task spec, named failure modes, ≥3 adversarial tests before shipping | Writing or revising a reusable prompt |
 
 ## Installation
@@ -147,6 +148,7 @@ The router fires protocols automatically. These commands let you invoke one on d
 | `/diagnose` | diagnostic-reasoning | A bug or failure needs root-causing before you change code |
 | `/domain` | domain-modeling | Designing a schema or the core entities of a system |
 | `/estimate` | estimation | Committing to an effort, time, or cost number |
+| `/interface` | interface-design-reasoning | Designing or reviewing an interface's hierarchy, states, and visual direction |
 | `/plan` | project-planning | Turning a settled goal into a sequenced build plan |
 | `/prompt` | prompt-design | Writing or revising a reusable prompt or agent instruction |
 | `/quality` | code-quality-analysis | Reviewing or refactoring a diff or a specific file |
